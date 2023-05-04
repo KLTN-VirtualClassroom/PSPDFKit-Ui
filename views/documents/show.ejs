@@ -48,6 +48,8 @@
 
         // old_ratioX = scrollKit.scrollTop;
         // old_ratioY = scrollKit.scrollLeft;
+
+        console.log(scrollKit.scrollTop);
         
         socket.emit("scrolling-pdf",{
           ratioX: scrollKit.scrollTop,
@@ -61,6 +63,7 @@
          scrollKit.scrollTop = e.ratioX,
          scrollKit.scrollLeft = e.ratioY
         }
+        console.log(scrollKit.scrollTop);
 
         await getData();
       })
