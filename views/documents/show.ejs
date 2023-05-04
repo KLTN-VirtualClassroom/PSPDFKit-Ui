@@ -36,26 +36,31 @@
         instance.contentDocument.querySelector(".PSPDFKit-Scroll");
       // const ratioY = scrollKit.scrollTop / scrollKit.scrollHeight;
       // const ratioX = scrollKit.scrollLeft / scrollKit.scrollWidth;
+
+
+
       
       let old_ratioX = null;
       let old_ratioY = null;
      
       scrollKit.addEventListener("scroll", function () {
-        if(scrollKit.scrollTop !== old_ratioX && scrollKit.scrollLeft !== old_ratioY){
+        // if(scrollKit.scrollTop !== old_ratioX && scrollKit.scrollLeft !== old_ratioY){
 
-        old_ratioX = scrollKit.scrollTop;
-        old_ratioY = scrollKit.scrollLeft;
+        // old_ratioX = scrollKit.scrollTop;
+        // old_ratioY = scrollKit.scrollLeft;
         
         socket.emit("scrolling-pdf",{
           ratioX: scrollKit.scrollTop,
           ratioY: scrollKit.scrollLeft
         })
-      }
+      
       });
 
-      socket.on("sync-scrolling-pdf", (e) =>{
+      socket.on("sync-scrolling-pdf", async (e) =>{ 
+        const getData = await function () {
          scrollKit.scrollTop = e.ratioX,
          scrollKit.scrollLeft = e.ratioY
+        }
       })
 
 
