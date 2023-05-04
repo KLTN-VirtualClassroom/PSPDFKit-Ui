@@ -28,8 +28,8 @@
       //     annotation instanceof PSPDFKit.Annotations.MediaAnnotation
       // );
 
-      // const socket = new io("https://socket.kltnvirtualclassroom.online");
-      // // const socket = new io("http://localhost:3131");
+      const socket = new io("https://socket.kltnvirtualclassroom.online");
+      // const socket = new io("http://localhost:3131");
 
 
       // const scrollKit =
@@ -56,28 +56,28 @@
       //   scrollKit.scrollLeft = e.ratioY
       // })
 
-      // // instance.addEventListener(
-      // //   "instant.connectedClients.change",
-      // //   (clients) => {
-      // //     console.log(clients.toJS());
-      // //   }
-      // // );
+      // instance.addEventListener(
+      //   "instant.connectedClients.change",
+      //   (clients) => {
+      //     console.log(clients.toJS());
+      //   }
+      // );
 
-      // const handleZoomEvent = (e) => {
-      //   socket.emit("pdf-zoom",{
-      //     value: e
-      //   })
-      // };
+      const handleZoomEvent = (e) => {
+        socket.emit("pdf-zoom",{
+          value: e
+        })
+      };
 
-      // instance.addEventListener('viewState.zoom.change', handleZoomEvent);
+      instance.addEventListener('viewState.zoom.change', handleZoomEvent);
 
-      // socket.on("change-pdf-zoom", (e)=>{
-      //   instance.setViewState(viewState => viewState.set("zoom", e.value))
-      // })
+      socket.on("change-pdf-zoom", (e)=>{
+        instance.setViewState(viewState => viewState.set("zoom", e.value))
+      })
 
-      // socket.on("pdf-current-zoom", (e)=>{
-      //   instance.setViewState(viewState => viewState.set("zoom", e.value))
-      // })
+      socket.on("pdf-current-zoom", (e)=>{
+        instance.setViewState(viewState => viewState.set("zoom", e.value))
+      })
 
 
       console.log("Successfully mounted PSPDFKit", instance);
