@@ -40,10 +40,10 @@
      
       scrollKit.addEventListener("scroll", function () {
         //console.log(scrollKit.scrollTop+ " "+ scrollKit.scrollLeft);
-        // socket.emit("scrolling-pdf",{
-        //   ratioX: scrollKit.scrollTop,
-        //   ratioY: scrollKit.scrollLeft
-        // })
+        socket.emit("scrolling-pdf",{
+          ratioX: scrollKit.scrollTop,
+          ratioY: scrollKit.scrollLeft
+        })
       });
 
       socket.on("sync-scrolling-pdf", (e) =>{
