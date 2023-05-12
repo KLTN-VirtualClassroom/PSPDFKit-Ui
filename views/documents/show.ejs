@@ -5,7 +5,10 @@
 <div id="pspdfkit" style="width: 100%; height: 100%"></div>
 
 <script type='text/javascript' src='https://socket.kltnvirtualclassroom.online/socket.io/socket.io.js'></script>
-<!-- <script type='text/javascript' src="http://localhost:3131/socket.io/socket.io.js"></script> -->
+<!-- <script
+  type="text/javascript"
+  src="http://localhost:3131/socket.io/socket.io.js"
+></script> -->
 
 <!-- 3. Initialize PSPDFKit. -->
 <script>
@@ -30,55 +33,59 @@
 
       const socket = new io("https://socket.kltnvirtualclassroom.online");
       // const socket = new io("http://localhost:3131");
+      var params = location.href.split("?")[1].split("&");
+      var data = {};
+      for (x in params) {
+        data[params[x].split("=")[0]] = params[x].split("=")[1];
+      }
+      const roomId = data.roomId
 
+      socket.emit("get-room-info", { roomId: roomId});
 
       const scrollKit =
         instance.contentDocument.querySelector(".PSPDFKit-Scroll");
       // const ratioY = scrollKit.scrollTop / scrollKit.scrollHeight;
       // const ratioX = scrollKit.scrollLeft / scrollKit.scrollWidth;
 
-
-
-      
       let old_ratioX = null;
       let old_ratioY = null;
-     
+      let sync_status = false;
+
       scrollKit.addEventListener("scroll", function () {
-        console.log(scrollKit.scrollTop + " And " + old_ratioX)
-        if(scrollKit.scrollTop !== old_ratioX || scrollKit.scrollLeft !== old_ratioY){
+        console.log(scrollKit.scrollTop + " And " + old_ratioX);
+        if(!sync_status){
+        if (
+          scrollKit.scrollTop !== old_ratioX ||
+          scrollKit.scrollLeft !== old_ratioY
+        ) {
+          old_ratioX = scrollKit.scrollTop;
 
-        old_ratioX = scrollKit.scrollTop;
-        
-        old_ratioY = scrollKit.scrollLeft;
+          old_ratioY = scrollKit.scrollLeft;
 
-        console.log("Event " +scrollKit.scrollTop);
-        
-        socket.emit("scrolling-pdf",{
-          ratioX: scrollKit.scrollTop,
-          ratioY: scrollKit.scrollLeft
-        })
+          console.log("Event " + scrollKit.scrollTop);
+
+          socket.emit("scrolling-pdf", {
+            ratioX: scrollKit.scrollTop,
+            ratioY: scrollKit.scrollLeft,
+          });
+        }
       }
+      else sync_status = false;
       });
 
-      socket.on("sync-scrolling-pdf",  async (e) =>{ 
-        const getData =  function() {
-         scrollKit.scrollTop = e.ratioX,
-         scrollKit.scrollLeft = e.ratioY
-        }
-        console.log("Sync "+scrollKit.scrollTop);
+      socket.on("sync-scrolling-pdf", async (e) => {
+        const getData = function () {
+          (scrollKit.scrollTop = e.ratioX), (scrollKit.scrollLeft = e.ratioY);
+          sync_status = true;
+        };
+        console.log("Sync " + scrollKit.scrollTop);
 
         await getData();
-      })
+      });
 
-
-
-
-
-
-      socket.on("sync-scrolling-pdf-first-access", (e) =>{
-        scrollKit.scrollTop = e.ratioX,
-        scrollKit.scrollLeft = e.ratioY
-      })
+      socket.on("sync-scrolling-pdf-first-access", (e) => {
+        (scrollKit.scrollTop = e.ratioX), (scrollKit.scrollLeft = e.ratioY);
+      });
 
       // instance.addEventListener(
       //   "instant.connectedClients.change",
@@ -88,24 +95,22 @@
       // );
 
       const handleZoomEvent = (e) => {
-        socket.emit("pdf-zoom",{
-          value: e
-        })
+        socket.emit("pdf-zoom", {
+          value: e,
+        });
       };
 
-      instance.addEventListener('viewState.zoom.change', handleZoomEvent);
+      instance.addEventListener("viewState.zoom.change", handleZoomEvent);
 
-      socket.on("change-pdf-zoom", (e)=>{
-        instance.setViewState(viewState => viewState.set("zoom", e.value))
-      })
+      socket.on("change-pdf-zoom", (e) => {
+        instance.setViewState((viewState) => viewState.set("zoom", e.value));
+      });
 
-      socket.on("pdf-current-zoom", (e)=>{
-        instance.setViewState(viewState => viewState.set("zoom", e.value))
-      })
-
+      socket.on("pdf-current-zoom", (e) => {
+        instance.setViewState((viewState) => viewState.set("zoom", e.value));
+      });
 
       console.log("Successfully mounted PSPDFKit", instance);
-
     })
     .catch(function (error) {
       console.error(error.message);
