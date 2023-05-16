@@ -63,7 +63,7 @@
 
             old_ratioY = scrollKit.scrollLeft;
 
-            console.log("Event " + scrollKit.scrollTop);
+            //console.log("Event " + scrollKit.scrollTop);
 
             socket.emit("scrolling-pdf", {
               ratioX: scrollKit.scrollTop,
@@ -78,7 +78,7 @@
           (scrollKit.scrollTop = e.ratioX), (scrollKit.scrollLeft = e.ratioY);
           sync_status = true;
         };
-        console.log("Sync " + scrollKit.scrollTop);
+        //console.log("Sync " + scrollKit.scrollTop);
 
         await getData();
       });
@@ -97,20 +97,18 @@
       let sync_zoom = false;
 
       const handleZoomEvent = (e) => {
-        //if (!sync_zoom) {
+        if (!sync_zoom)
           socket.emit("pdf-zoom", {
             value: e,
           });
-        //} 
-        //else sync_zoom = false;
+        else sync_zoom = false;
       };
 
       instance.addEventListener("viewState.zoom.change", handleZoomEvent);
 
       socket.on("change-pdf-zoom", (e) => {
-        instance.setViewState((viewState) => {
-          viewState.set("zoom", e.value);
-        });
+        sync_zoom = true;
+        instance.setViewState((viewState) => viewState.set("zoom", e.value));
       });
 
       socket.on("pdf-current-zoom", (e) => {
