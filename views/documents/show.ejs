@@ -107,8 +107,10 @@
       instance.addEventListener("viewState.zoom.change", handleZoomEvent);
 
       socket.on("change-pdf-zoom", (e) => {
-        instance.setViewState((viewState) => viewState.set("zoom", e.value));
-        sync_zoom = true;
+        instance.setViewState((viewState) => {
+          sync_zoom = true;
+          viewState.set("zoom", e.value);
+        });
       });
 
       socket.on("pdf-current-zoom", (e) => {
