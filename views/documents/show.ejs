@@ -98,7 +98,6 @@
 
       const handleZoomEvent = (e) => {
         //if (!sync_zoom) {
-          console.log("Event")
           socket.emit("pdf-zoom", {
             value: e,
           });
@@ -110,7 +109,6 @@
 
       socket.on("change-pdf-zoom", (e) => {
         instance.setViewState((viewState) => {
-          console.log("Sync")
           viewState.set("zoom", e.value);
         });
       });
