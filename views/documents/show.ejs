@@ -97,18 +97,20 @@
       let sync_zoom = false;
 
       const handleZoomEvent = (e) => {
-        if (!sync_zoom) {
+        //if (!sync_zoom) {
+          console.log("Event")
           socket.emit("pdf-zoom", {
             value: e,
           });
-        } else sync_zoom = false;
+        //} 
+        //else sync_zoom = false;
       };
 
       instance.addEventListener("viewState.zoom.change", handleZoomEvent);
 
       socket.on("change-pdf-zoom", (e) => {
         instance.setViewState((viewState) => {
-          sync_zoom = true;
+          console.log("Sync")
           viewState.set("zoom", e.value);
         });
       });
