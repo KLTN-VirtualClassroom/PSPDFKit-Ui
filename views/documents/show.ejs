@@ -94,16 +94,21 @@
       //   }
       // );
 
+      let sync_zoom = false;
+
       const handleZoomEvent = (e) => {
-        socket.emit("pdf-zoom", {
-          value: e,
-        });
+        if (!sync_zoom) {
+          socket.emit("pdf-zoom", {
+            value: e,
+          });
+        } else sync_zoom = false;
       };
 
       instance.addEventListener("viewState.zoom.change", handleZoomEvent);
 
       socket.on("change-pdf-zoom", (e) => {
         instance.setViewState((viewState) => viewState.set("zoom", e.value));
+        sync_zoom = true;
       });
 
       socket.on("pdf-current-zoom", (e) => {
