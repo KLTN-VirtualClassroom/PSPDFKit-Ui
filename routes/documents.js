@@ -7,14 +7,14 @@ var jwtKey = fs.readFileSync(
   path.resolve(__dirname, "../config/pspdfkit/jwt.pem")
 );
 
-router.get("/:role/:documentId", function (req, res, next) {
-  var jwt = prepareJwt(req.params.documentId, req.params.role);
+router.get("/:role/:documentId/:layer", function (req, res, next) {
+  var jwt = prepareJwt(req.params.documentId, req.params.role, req.params.layer);
   //res.render("documents/show", { documentId: req.params.documentId });
   res.render("documents/show", { documentId: req.params.documentId, jwt: jwt });
   // res.render("documents/show", { documentId: "7KPS6DAGK0ED6BJBX6JE4SRPFT" });
 });
 
-var prepareJwt = function (documentId, role) {
+var prepareJwt = function (documentId, role, layer) {
   var claims = {};
   console.log(role)
   if (role === "teacher") {
@@ -22,6 +22,7 @@ var prepareJwt = function (documentId, role) {
       document_id: documentId,
       permissions: ["read-document", "write", "download"],
       user_id: role,
+      layer: layer
     };
   } 
   
@@ -30,6 +31,7 @@ var prepareJwt = function (documentId, role) {
       document_id: documentId,
       permissions: ["read-document", "write", "download"],
       user_id: role,
+      layer: layer
     };
   }
   
@@ -38,6 +40,7 @@ var prepareJwt = function (documentId, role) {
       document_id: documentId,
       permissions: ["read-document","download"],
       user_id: role,
+      layer: layer
     };
   }
 
