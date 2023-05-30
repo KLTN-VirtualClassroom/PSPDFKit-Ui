@@ -41,7 +41,7 @@
       }
       const roomId = data.roomId;
 
-      socket.emit("get-room-info", { roomId: roomId });
+      socket.emit("get-room-info", { roomId: roomId, type: "pdf" });
 
       const scrollKit =
         instance.contentDocument.querySelector(".PSPDFKit-Scroll");
